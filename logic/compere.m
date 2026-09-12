@@ -10,9 +10,10 @@
 % reference mask created by reference.m
 reference_mask = load(strcat(phantom,filesep,'phantom_3_256_v.mat')).Matrix;
 
-% tables with Dice and Hausdorf value
+% tables with Dice, Hausdorf and sum of voxels values
 Dice_table = ["Matrix_size" "FOV" "CutOff" "Dice" ];
 Hausdorf_table = ["Matrix_size" "FOV" "CutOff" "HH" "HD95"];
+Sum_table = ["Matrix_size" "FOV" "CutOff" "Voxel_sum"];
 
 
 raw_data_name = '260603';
@@ -55,10 +56,14 @@ for matrix_size = matrix_size_start:matrix_size_step:matrix_size_end
 
             % calculation of the Hausforff distance and 95 percentile
             [HH, HD95] = hausdorff_distance_3D(reference_mask, rec_mask);
+
+            %calculating sum of all voxels in image
+            voxel_sum = sum(rec_mask(:));
             
             % saving values
             Dice_table = [Dice_table; matrix_size, FOV, cutoff, dice_value];
             Hausdorf_table = [Hausdorf_table; matrix_size, FOV, cutoff, HH, HD95];
+            Sum_table = [Sum_table; matrix_size, FOV, cutoff, voxel_sum];
 
         end
     end
